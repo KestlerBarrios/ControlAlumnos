@@ -77,19 +77,44 @@ function registrarProfesor(req, res) {
     }
 }
 
-function login(req, res) {
+function loginAlumno(req, res) {
     const params = req.body
 
-    User.findOne({ email: params.email }, (err, usuario) => {
+    Alumno.findOne({ email: params.email }, (err, alumno) => {
         if (err) return res.status(500).send({ message: 'Error en la peticion' })
-        if (usuario) {
-            bcrypt.compare(params.password, usuario.password, (err, check) => {
+        if (alumno) {
+            bcrypt.compare(params.password, alumno.password, (err, check) => {
                 if (check) {
                     if (params.gettoken) {
-                        return res.status(200).send({ token: jwt.createToken(usuario) })
+                        return res.status(200).send({ token: jwt.createToken(alumno) })
                     } else {
-                        usuario.password = undefined
-                        return res.status(200).send({ user: usuario })
+                        alumno.password = undefined
+                        return res.status(200).send({ user: alumno })
+                    }
+                } else {
+                    res.status(404).send({ message: 'El usuario no se ha podido identificar.' })
+                }
+            })
+        } else {
+            return res.status(404).send({ message: 'El usuario no se ha podido logear' })
+        }
+    })
+
+}
+
+function loginProfesor(req, res) {
+    const params = req.body
+
+    Profesor.findOne({ email: params.email }, (err, profesor) => {
+        if (err) return res.status(500).send({ message: 'Error en la peticion' })
+        if (profesor) {
+            bcrypt.compare(params.password, profesor.password, (err, check) => {
+                if (check) {
+                    if (params.gettoken) {
+                        return res.status(200).send({ token: jwt.createToken(profesor) })
+                    } else {
+                        profesor.password = undefined
+                        return res.status(200).send({ profesor: profesor })
                     }
                 } else {
                     res.status(404).send({ message: 'El usuario no se ha podido identificar.' })
@@ -111,7 +136,8 @@ function getUsers(req, res) {
 
 module.exports = {
     registrarAlumno,
-    login,
+    loginAlumno,
+    loginProfesor,
     getUsers,
     registrarProfesor
 }

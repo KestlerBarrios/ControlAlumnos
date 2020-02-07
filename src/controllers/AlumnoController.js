@@ -1,11 +1,6 @@
 'use strict'
 
-const bcrypt = require('bcrypt-nodejs')
-const path = require('path')
-const fs = require('fs')
-
 const Alumno = require('../models/Alumno')
-const jwt = require('../services/jwt')
 
 
 function editarAlumno(req, res) {
@@ -34,7 +29,17 @@ function deleteAlumno (req, res) {
     })
 }
 
+function asignarCurso (req, res){
+    let alumnoId = req.params.alumnoId
+    let params = req.body
+    Alumno.findByIdAndUpdate(alumnoId, { $push: { cursos: { cursos: params.nombre } } }, { new: true }, (err, cursoActualizado) => {
+        if(err) return res.status(500).send({ message: 'Error en la peticion de curso' })
+        if(!cursoActualizado) return res.status(404).send({ message: 'Error al guardar el curso' })
+        return res.status(200).send({ comentario: cursoActualizado })
+    })
+}
 module.exports = {
     editarAlumno,
-    deleteAlumno
+    deleteAlumno,
+    asignarCurso
 }
