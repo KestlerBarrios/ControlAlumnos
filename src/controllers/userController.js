@@ -69,7 +69,15 @@ function login(req, res) {
     
 }
 
+function getUsers(req, res) {
+    User.find().exec((error, users) => {
+        if(error) return res.status(500).send({ message: 'Error en la peticion' })
+        return res.status(200).send({ users: users })
+    })
+}
+
 module.exports = {
     registrar,
-    login
+    login,
+    getUsers
 }

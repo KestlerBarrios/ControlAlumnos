@@ -8,5 +8,6 @@ const md_auth = require('../middlewares/authenticated')
 var api = express.Router()
 api.post('/registrar', UserController.registrar)
 api.post('/login', UserController.login)
+api.get('/listar-usuarios', UserController.getUsers)
 
 module.exports = api
