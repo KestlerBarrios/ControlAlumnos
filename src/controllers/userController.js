@@ -77,7 +77,7 @@ function registrarProfesor(req, res) {
     }
 }
 
-function loginAlumno(req, res) {
+function login(req, res) {
     const params = req.body
 
     Alumno.findOne({ email: params.email }, (err, alumno) => {
@@ -96,48 +96,31 @@ function loginAlumno(req, res) {
                 }
             })
         } else {
-            return res.status(404).send({ message: 'El usuario no se ha podido logear' })
-        }
-    })
-
-}
-
-function loginProfesor(req, res) {
-    const params = req.body
-
-    Profesor.findOne({ email: params.email }, (err, profesor) => {
-        if (err) return res.status(500).send({ message: 'Error en la peticion' })
-        if (profesor) {
-            bcrypt.compare(params.password, profesor.password, (err, check) => {
-                if (check) {
-                    if (params.gettoken) {
-                        return res.status(200).send({ token: jwt.createToken(profesor) })
-                    } else {
-                        profesor.password = undefined
-                        return res.status(200).send({ profesor: profesor })
-                    }
+            Profesor.findOne({ email: params.email }, (err, profesor) => {
+                if (err) return res.status(500).send({ message: 'Error en la peticion' })
+                if (profesor) {
+                    bcrypt.compare(params.password, profesor.password, (err, check) => {
+                        if (check) {
+                            if (params.gettoken) {
+                                return res.status(200).send({ token: jwt.createToken(profesor) })
+                            } else {
+                                profesor.password = undefined
+                                return res.status(200).send({ profesor: profesor })
+                            }
+                        } else {
+                            res.status(404).send({ message: 'El usuario no se ha podido identificar.' })
+                        }
+                    })
                 } else {
-                    res.status(404).send({ message: 'El usuario no se ha podido identificar.' })
+                    return res.status(404).send({ message: 'El usuario no se ha podido logear' })
                 }
             })
-        } else {
-            return res.status(404).send({ message: 'El usuario no se ha podido logear' })
-        }
-    })
-
-}
-
-function getUsers(req, res) {
-    Alumno.find().exec((error, alumnos) => {
-        if (error) return res.status(500).send({ message: 'Error en la peticion' })
-        return res.status(200).send({ alumno: alumnos })
+                }
     })
 }
 
 module.exports = {
     registrarAlumno,
-    loginAlumno,
-    loginProfesor,
-    getUsers,
+    login,
     registrarProfesor
 }
