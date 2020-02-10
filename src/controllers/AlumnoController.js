@@ -32,11 +32,11 @@ function deleteAlumno (req, res) {
 function asignarCurso (req, res){
     let alumnoId = req.params.alumnoId
     let params = req.body
-    Alumno.findByIdAndUpdate(alumnoId, { $push: { cursos: { cursos: params.nombre } } }, { new: true }, (err, cursoActualizado) => {
+    Alumno.findByIdAndUpdate(alumnoId, { $push: { cursos: { nombre: params.nombre } } }, { new: true }, (err, cursoActualizado) => {
         if(err) return res.status(500).send({ message: 'Error en la peticion de curso' })
         if(!cursoActualizado) return res.status(404).send({ message: 'Error al guardar el curso' })
-        return res.status(200).send({ comentario: cursoActualizado })
-    })
+        return res.status(200).send({ curso: cursoActualizado })
+    })        
 }
 module.exports = {
     editarAlumno,
