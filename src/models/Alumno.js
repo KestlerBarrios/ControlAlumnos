@@ -10,7 +10,7 @@ var AlumnoSchema = Schema({
     password: String, 
     rol: String, 
     cursos: {
-        nombre: String
+        nombre: String//{type: Schema.ObjectId, ref: 'profesor'}
     }
 })
 

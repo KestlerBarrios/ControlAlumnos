@@ -35,8 +35,8 @@ function asignarCurso (req, res){
     Alumno.findByIdAndUpdate(alumnoId, { $push: { cursos: { nombre: params.nombre } } }, { new: true }, (err, cursoActualizado) => {
         if(err) return res.status(500).send({ message: 'Error en la peticion de curso' })
         if(!cursoActualizado) return res.status(404).send({ message: 'Error al guardar el curso' })
-        return res.status(200).send({ curso: cursoActualizado })
-    })        
+        return res.status(200).send({ curso: cursoActualizado })    
+    })
 }
 module.exports = {
     editarAlumno,
