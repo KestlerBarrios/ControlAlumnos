@@ -9,11 +9,7 @@ var ProfesorSchema = Schema({
     email: String,
     password: String, 
     rol: String, 
-    cursos: [{
-        nombre: String,
-        descripcion: String,
-        costo: Number
-    }]
+    cursos: {type: Schema.ObjectId, ref: 'cursos'}
 })
 
 module.exports = mongoose.model('profesor', ProfesorSchema)

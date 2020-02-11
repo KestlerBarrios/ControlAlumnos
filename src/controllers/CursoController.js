@@ -26,7 +26,6 @@ function getCursos(req, res) {
         if (!cursos) return res.status(404).send({ message: 'Error al listar Cursos' })
         return res.status(200).send({listadoCursos: cursos})
     })
-
 }
 
 function editarCurso(req, res) {
